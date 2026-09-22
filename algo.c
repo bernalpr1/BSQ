@@ -60,6 +60,9 @@ t_max	ft_max_square(int **grid, t_square *map, int max)
 	int i;
 	int j;
 	t_max	ret;
+
+    ret.cv_x = -1;
+    ret.cv_y = -1;
 	x = map->x;
 	y = map->y;
 	i = -1;
@@ -79,15 +82,11 @@ t_max	ft_max_square(int **grid, t_square *map, int max)
 	return (ret);
 }
 
-void	ft_draw(int	**grid, t_square *map, t_max ret, int max)
+void	ft_draw(int	**grid, t_max ret, int max)
 {
-	int	x;
-	int	y;
 	int	i;
 	int	j;
 
-	x = map->x;
-	y = map->y;
 	i = -1;
 	while (++i < max)
 	{

@@ -37,7 +37,7 @@ int	**ft_init_grid(t_square	*square);
 int	ft_atoi(char *str);
 int fill_grid(int fd, int **grid, t_square *map);
 int	ft_solver(int **grid, t_square *map);
-void    ft_draw(int     **grid, t_square *map, t_max ret, int max);
+void    ft_draw(int     **grid,  t_max ret, int max);
 t_max   ft_max_square(int **grid, t_square *map, int max);
 void    ft_translater(int **grid, t_square *square);
 

@@ -22,10 +22,10 @@ int	main(int ac, char **av)
 	int	max;
 	t_max	ret;
 	int	n;
-	int l;
 	int i;
 
 	n = 1;
+    i = 0;
 	while (n < ac)
 	{
 		fd = open(av[n], O_RDONLY);
@@ -42,7 +42,7 @@ int	main(int ac, char **av)
 		}
 		max = ft_solver(grid, square);
 		ret = ft_max_square(grid, square, max);
-		ft_draw(grid, square, ret, max);
+		ft_draw(grid, ret, max);
 		ft_translater(grid, square);
 		n++;
 		if (n < ac)
