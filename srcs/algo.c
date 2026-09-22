@@ -27,20 +27,16 @@ int get_max(int **grid,	int x, int y)
 
 int	ft_solver(int **grid, t_square *map)
 {
-	int x;
-	int y;
 	int i;
 	int j;
 	int max;
 	
-	max = 0;
-	x = map->x;
-	y = map->y;
+	max = 1;
 	i = 0;
-	while (++i < y)
+	while (++i < map->y)
 	{
 		j = 0;
-		while (++j < x)
+		while (++j < map->x)
 		{
 			if (grid[i][j] == 1)
 			{
@@ -55,21 +51,17 @@ int	ft_solver(int **grid, t_square *map)
 
 t_max	ft_max_square(int **grid, t_square *map, int max)
 {
-	int x;
-	int y;
 	int i;
 	int j;
+	
 	t_max	ret;
-
-    ret.cv_x = -1;
-    ret.cv_y = -1;
-	x = map->x;
-	y = map->y;
+	ret.cv_x = -1;
+	ret.cv_y = -1;
 	i = -1;
-	while (++i < y)
+	while (++i < map->y)
 	{
 		j = -1;
-		while (++j < x)
+		while (++j < map->x)
 		{
 			if (grid[i][j] == max)
 			{
@@ -88,6 +80,8 @@ void	ft_draw(int	**grid, t_max ret, int max)
 	int	j;
 
 	i = -1;
+	if (ret.cv_x == -1)
+		return ;
 	while (++i < max)
 	{
 		j = -1;

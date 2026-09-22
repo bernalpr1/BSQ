@@ -28,10 +28,14 @@ int fill_grid(int fd, int **grid, t_square *map)
 				grid[y][x] = 1;
 			else if (c == map->obs)
 				grid[y][x] = 0;
+			else
+				return (0);
 		}	
 		if (read(fd, &c, 1) != 1 || c != '\n')
 				return (0);
 	}
+	if (read(fd, &c, 1) > 0)
+		return (0);
 	return (1);	
 }
 
@@ -42,7 +46,6 @@ int ft_atoi(char *str)
 	
 	result = 0;
 	i = 0;
-		
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		result = (result * 10) + (str[i] - 48);

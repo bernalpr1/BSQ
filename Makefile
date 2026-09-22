@@ -1,9 +1,19 @@
 NAME = bsq
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-HEADER = bsq.h
+CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)
 
-SRC = algo.c grid_init.c parser.c parser_helper.c translate.c main.c
+SRC_DIR = srcs
+INC_DIR = includes
+
+HEADER = $(INC_DIR)/bsq.h
+
+SRC = $(SRC_DIR)/algo.c \
+      $(SRC_DIR)/grid_init.c \
+      $(SRC_DIR)/parser.c \
+      $(SRC_DIR)/parser_helper.c \
+      $(SRC_DIR)/translate.c \
+      $(SRC_DIR)/main.c
+
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
@@ -11,11 +21,11 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-%.o: %.c $(HEADER)
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
