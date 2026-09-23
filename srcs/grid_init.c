@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bsq.h"
+#include "../includes/bsq.h"
 
 int	**ft_init_grid(t_square	*square)
 {

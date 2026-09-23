@@ -1,5 +1,5 @@
 
-#include "bsq.h"
+#include "../includes/bsq.h"
 
 void    ft_get_char (int num, t_square *square)
 {

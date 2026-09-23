@@ -10,96 +10,79 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bsq.h"
+#include "../includes/bsq.h"
 
-int	ft_isprint(char c)
+static int	ft_isprint(char c)
 {
 	return (c >= 32 && c <= 126);
 }
-//check format of header and put it in buf
-int	ft_read_line1(int fd, char *buf)
-{
-	int		i;
-	int		red;
-	char	c;
 
-	i = 0;
-	red = read(fd, &c, 1);
-	while (red > 0 && c != '\n' && i < 14)
+static int	ft_parse_height(char *buffer, size_t length)
+{
+	int	result;
+	int	digit;
+
+	if (*buffer == '+')
 	{
-		buf[i] = c;
-		i++;
-		red = read(fd, &c, 1);
+		buffer++;
+		length--;
 	}
-	if (red <= 0 || c != '\n' || i < 4)
-		return (-1);
-	buf[i] = '\0';
-	return (i);
-}
-//fill struct with data to init grid
-int	ft_parse_header(t_square *sq, char *buf, int len)
-{
-	int i;
-
-	sq->ful = buf[len - 1];
-	sq->obs = buf[len - 2];
-	sq->emp = buf[len - 3];
-	if (!ft_isprint(sq->emp) || !ft_isprint(sq->obs) || !ft_isprint(sq->ful))
-		return (0); 
-	if (sq->emp == sq->obs || sq->emp == sq->ful || sq->obs == sq->ful)
-		return (0);
-	i = 0;
-	while (i < len - 3)
+	result = 0;
+	while (length-- > 0)
 	{
-		if (buf[i] < '0' || buf[i] > '9')
+		if (*buffer < '0' || *buffer > '9')
 			return (0);
-		i++;
+		digit = *buffer++ - '0';
+		if (result > (INT_MAX - digit) / 10)
+			return (0);
+		result = result * 10 + digit;
 	}
-	if (buf[0] == '0' && (len - 3) > 1)
+	return (result);
+}
+
+static int	ft_parse_header(t_square *map, char *buffer, size_t length)
+{
+	map->emp = buffer[length - 3];
+	map->obs = buffer[length - 2];
+	map->ful = buffer[length - 1];
+	if (!ft_isprint(map->emp) || !ft_isprint(map->obs)
+		|| !ft_isprint(map->ful))
 		return (0);
-	buf[len - 3] = '\0';
-	sq->y = ft_atoi(buf);
-	return (sq->y > 0);
-}
-//get map witdht
-int	ft_get_row_len(int fd)
-{
-	int		len;
-	int		red;
-	char	dummy;
-
-	len = 0;
-	red = read(fd, &dummy, 1);
-	while (red > 0 && dummy != '\n')
-	{
-		len++;
-		red = read(fd, &dummy, 1);
-	}
-	if (red <= 0 || len == 0 || dummy != '\n')
-		return (-1);
-	return (len);
+	if (map->emp == map->obs || map->emp == map->ful
+		|| map->obs == map->ful)
+		return (0);
+	map->y = ft_parse_height(buffer, length - 3);
+	return (map->y > 0);
 }
 
-t_square	*ft_getsize(int fd)
+static int	ft_get_row_len(char *buffer, size_t length)
 {
-	int			len;
-	char		buf[15];
-	t_square	*sq;
+	size_t	width;
 
-	sq = (t_square *)malloc(sizeof(t_square));
-	if (!sq)
-		return (NULL);
-	len = ft_read_line1(fd, buf);
-	if (len < 0 || !ft_parse_header(sq, buf, len))
-	{
-		free(sq);
-		return (NULL);
-	}
-	sq->x = ft_get_row_len(fd);
-	if (sq->x <= 0)
-	{
-		free(sq);
-		return (NULL);
-	}
-	return (sq);
+	width = 0;
+	while (width < length && buffer[width] != '\n')
+		width++;
+	if (width > INT_MAX)
+		return (0);
+	return ((int)width);
+}
+
+size_t	ft_parse_map(char *buffer, size_t length, t_square *map)
+{
+	size_t	offset;
+
+	offset = 0;
+	while (offset < length && buffer[offset] != '\n')
+		offset++;
+	if (offset == length || offset < 4)
+		return (0);
+	if (!ft_parse_header(map, buffer, offset))
+		return (0);
+	offset++;
+	map->x = ft_get_row_len(buffer + offset, length - offset);
+	if (map->x == 0)
+		return (0);
+	if (!ft_valid_rows(buffer + offset, length - offset, map))
+		return (0);
+	return (offset);
 }

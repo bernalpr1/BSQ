@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bsq.h"
+#include "../includes/bsq.h"
 
 int get_max(int **grid,	int x, int y)
 {
